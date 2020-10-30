@@ -1,3 +1,4 @@
+#include <cctype>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -38,42 +39,78 @@ void CreateUserMaze()
         std::cout << "Please specify the number of columns in the maze (" << MIN_MAZE_COLUMNS << " ~ " << MAX_MAZE_COLUMNS << "): ";
         std::cin >> MAZE_COLUMNS;
     } while (MAZE_COLUMNS < MIN_MAZE_COLUMNS || MAZE_COLUMNS > MAX_MAZE_COLUMNS);
+
+    system("CLS");
 }
 
 // Not implemented.
 void Load(const char* fileName)
 {
     // Attempt to load the file. If the maximum amount of rows or columns are bigger than 30, abort loading and return error.
-    // QUESTION: What is the maximum amount of rows/columns a maze should be able to load?
+}
+
+void GenerateMaze()
+{
+    unsigned short rowCenter = MAZE_ROWS / 2;
+    unsigned short columnCenter = MAZE_COLUMNS / 2;
+
+    for (unsigned char row = 0; row < MAZE_ROWS; row++)
+    {
+        for (unsigned char column = 0; column < MAZE_COLUMNS; column++)
+        {
+            // Starting cell
+            if (row == rowCenter && column == columnCenter)
+            {
+                std::cout << 'S';
+            }
+            else
+            {
+                if (row >= rowCenter - 1 && row <= rowCenter + 1 && column >= columnCenter - 1 && column <= columnCenter + 1)
+                    std::cout << ' ';
+                else
+                    std::cout << 'X';
+            }
+        }
+        std::cout << std::endl;
+    }
 }
 
 int main()
 {
     if (DetectSaveFile())
     {
-        char response = CHAR_MIN;
+        char loadResponse = CHAR_MIN;
+        char overwriteResponse = CHAR_MIN;
+
         do {
             std::cout << "A save file has been detected! Load? (Y/N): ";
-            std::cin >> response;
-        } while (response != 'Y' && response != 'N');
+            std::cin >> loadResponse;
 
-        if (response == 'Y')
-            Load("Maze.txt");
+            // If they wish to load the save file, load here.
+            if (toupper(loadResponse) == 'Y')
+            {
+                Load("Maze.txt");
+                break;
+            }
+            // Otherwise, ask them if they are sure.
+            else
+            {
+                do {
+                    std::cout << "The current save file will be overwritten, are you sure? (Y/N): ";
+                    std::cin >> overwriteResponse;
+                } while (toupper(overwriteResponse) != 'Y' && toupper(overwriteResponse) != 'N');
+
+                // If they are sure, overwrite the save file. Otherwise, continue.
+                if (toupper(overwriteResponse) == 'Y')
+                    break;
+            }
+        } while (toupper(loadResponse) != 'Y' && toupper(loadResponse) != 'N' || toupper(overwriteResponse) == 'N');
+
+        system("CLS");
     }
 
     CreateUserMaze();
-}
-
-void GenerateMaze()
-{
-    for (unsigned char row = 0; row <= MAZE_ROWS; row++)
-    {
-        for (unsigned char column = 0; column <= MAZE_COLUMNS; column++)
-        {
-            std::cout << 'X';
-        }
-        std::cout << std::endl;
-    }
+    GenerateMaze();
 }
 
 void PollInput()
