@@ -21,3 +21,10 @@ x64/Debug/CSC8501_CW1.tlog/link.write.1.tlog
 x64/Debug/CSC8501_CW1.vcxproj.FileListAbsolute.txt
 x64/Debug/vc142.idb
 x64/Debug/vc142.pdb
+x64/Debug/CSC8501_CW1.tlog/unsuccessfulbuild
+.vs/CSC8501_CW1/v16/ipch/AutoPCH/2975cbea41cd76e6/MAZE.ipch
+.vs/CSC8501_CW1/v16/ipch/AutoPCH/4508f81d92b33735/BACKTRACKER.ipch
+.vs/CSC8501_CW1/v16/ipch/AutoPCH/61f4bf6421536f28/CELL.ipch
+.vs/CSC8501_CW1/v16/ipch/AutoPCH/a32e4b3a773fbac4/SAVEMANAGER.ipch
+.vs/CSC8501_CW1/v16/ipch/AutoPCH/ff130cac7d4130d5/MAZE.ipch
+x64/Debug/SaveManager.obj

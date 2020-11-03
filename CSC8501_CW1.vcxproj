@@ -147,14 +147,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BST.cpp" />
     <ClCompile Include="CSC8501_CW1.cpp" />
+    <ClCompile Include="SaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BST.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Maze.txt" />
+    <ClInclude Include="Cell.h" />
+    <ClInclude Include="CSC8501_CW1.h" />
+    <ClInclude Include="SaveManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
