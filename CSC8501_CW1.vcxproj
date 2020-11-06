@@ -149,10 +149,12 @@
   <ItemGroup>
     <ClCompile Include="CSC8501_CW1.cpp" />
     <ClCompile Include="SaveManager.cpp" />
+    <ClCompile Include="Maze.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cell.h" />
     <ClInclude Include="CSC8501_CW1.h" />
+    <ClInclude Include="Maze.h" />
     <ClInclude Include="SaveManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

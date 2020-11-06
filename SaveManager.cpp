@@ -1,18 +1,8 @@
 #include "SaveManager.h"
-#include <fstream>
-#include <iostream>
-#include <limits>
 
-#define CLEAR_CONSOLE system("CLS");
-
-/*
-Determines whether "Maze.txt" exists in the current directory. Checks if it does not exist by using <ifstream>'s fail() function and returns the opposite result signalling whether a file has been detected.
-
-Further work needs to be done in order to make sure it detects any .txt file as a potential save file, most likely through regex or substring.
-*/
 bool SaveManager::DetectSaveFile()
 {
-    std::ifstream fin("Maze.txt");
+    std::ifstream fin("maze.txt");
 
     if (fin.fail() == false)
         fin.close();
@@ -20,10 +10,21 @@ bool SaveManager::DetectSaveFile()
     return !fin.fail();
 }
 
-void SaveManager::LoadPrompt()
+bool SaveManager::DetectSaveFile(const char* fileName)
+{
+    std::ifstream fin(fileName);
+
+    if (fin.fail() == false)
+        fin.close();
+
+    return !fin.fail();
+}
+
+bool SaveManager::LoadPrompt()
 {
     char loadResponse = CHAR_MIN;
     char overwriteResponse = CHAR_MIN;
+    std::vector<Cell*> arr;
 
     do {
         std::cout << "A save file has been detected! Load? (Y/N): ";
@@ -33,7 +34,8 @@ void SaveManager::LoadPrompt()
         if (toupper(loadResponse) == 'Y')
         {
             CLEAR_CONSOLE;
-            SaveManager::LoadSaveFile("Maze.txt");
+            arr = SaveManager::LoadSaveFile("Maze.txt");
+            Maze::PromptConsole(arr);
             break;
         }
         // Otherwise, ask them if they are sure.
@@ -46,22 +48,92 @@ void SaveManager::LoadPrompt()
 
             // If they are sure, overwrite the save file. Otherwise, continue.
             if (toupper(overwriteResponse) == 'Y')
+            {
                 break;
+            }
+
         }
     } while (toupper(loadResponse) != 'Y' && toupper(loadResponse) != 'N' || toupper(overwriteResponse) == 'N');
+
+    return false;
 }
 
-/*
-Not implemented.
-*/
-void SaveManager::LoadSaveFile(const char* fileName)
+std::vector<Cell*> SaveManager::LoadSaveFile(const char* fileName)
 {
+    std::ifstream file(fileName);
+    std::vector<Cell*> array;
+    if (file.is_open())
+    {
+        int row = 0;
+        for (std::string line; std::getline(file, line); )
+        {
+            std::cout << line << std::endl;
+            for (int column = 0; column < line.length(); column++)
+            {
+                array.push_back(new Cell(column, row, line[column]));
+            }
+            MAZE_COLUMNS = line.length();
+            row++;
+        }
+        MAZE_ROWS = row;
+    }
 
-    // Attempt to load the file. If the maximum amount of rows or columns are bigger than 30, abort loading and return error.
+    file.close();
+    return array;
 }
 
-void SaveManager::SaveFile(const char* fileName)
+bool SaveFile(const char* fileName, std::vector<Cell*>& cells)
 {
-    std::ofstream fout(fileName);
-    
+    char confirmationResponse = CHAR_MIN;
+    std::string name;
+    do
+    {
+        if (std::string(fileName).length() < 6)
+        {
+            name = "";
+            do
+            {
+                std::cout << "Please enter a valid file name: ";
+                std::getline(std::cin, name);            
+            } while (name.length() < 0);
+        }
+        else
+        {
+            name = std::string(fileName).substr(5, sizeof(fileName));
+        }
+
+        std::cout << "This maze will be saved as \'" << name << ".txt\', are you sure? (Y/N): ";
+        std::cin >> confirmationResponse;
+    } while (toupper(confirmationResponse) != 'Y' && toupper(confirmationResponse) != 'N');
+
+    if (toupper(confirmationResponse) == 'N')
+    {
+        return false;
+    }
+    else
+    {
+        std::string outputName = name + ".txt";
+        std::ofstream file(outputName, std::ios::app);
+
+        if (file.is_open())
+        {
+            for (int row = 0; row < MAZE_ROWS; row++)
+            {
+                for (int column = 0; column < MAZE_COLUMNS; column++)
+                {
+                    int index = (row * MAZE_COLUMNS) + column;
+                    char value = cells.at(index)->GetValue();
+                    const char* ptr = &value;
+                    file.write(ptr, 1);
+                }
+                char value = '\n';
+                const char* ptr = &value;
+                file.write(ptr, 1);
+            }
+        }
+
+        file.close();
+        std::cout << "\'" << outputName << "\' saved successfully." << std::endl;
+        return true;
+    }
 }

@@ -1,12 +1,15 @@
 #ifndef CELL_H
 #define CELL_H
-#include "CSC8501_CW1.h"
+
+extern int MAZE_ROWS;
+extern int MAZE_COLUMNS;
 
 class Cell
 {
 private:
-	char row;
-	char column;
+	int row;
+	int column;
+	int distance;
 	char value;
 public:
 	Cell();
@@ -15,23 +18,27 @@ public:
 		column = x;
 		row = y;
 		value = character;
-
+		distance = INT_MAX;
 		if (row == 0 || row == MAZE_ROWS - 1)
 			this->boundary = true;
 		else if (column == 0 || column == MAZE_COLUMNS - 1)
 			this->boundary = true;
 		else if (character == 'S')
 		{
+			extern Cell* currentPosition;
 			currentPosition = this;
 			this->visited = true;
 		}
 	}
-	const inline char GetValue() { return value; }
-	const inline unsigned char GetColumn() { return column; }
-	const inline unsigned char GetRow() { return row; }
+	inline char GetValue() { return value; }
+	const inline int GetColumn() { return column; }
+	const inline int GetRow() { return row; }
+	const inline int GetDistance() { return distance; }
 	inline void SetValue(char input) { value = input; }
+	inline void SetDistance(int dist) { distance = dist; }
 	bool boundary = false;
 	bool visited = false;
 };
+
 
 #endif
